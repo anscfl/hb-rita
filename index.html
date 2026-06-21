@@ -1,0 +1,2367 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ДЕЛО №23 — РИТА</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================
+   DESIGN TOKENS
+======================== */
+        :root {
+            --beige: #F4EFE7;
+            --paper: #FCFAF7;
+            --graphite: #1F1F1F;
+            --burgundy: #A92C2C;
+            --red-thread: #C0392B;
+            --archive-green: #6E7C72;
+            --aged-paper: #E8DFD0;
+            --stamp-red: #A92C2C;
+            --ink-dark: #2C2416;
+            --ink-faint: #8B7355;
+
+            --font-typewriter: 'Special Elite', 'Courier New', monospace;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+
+            --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+            --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+            --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+            --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+            --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+            --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+            --text-hero: clamp(3rem, 0.5rem + 7vw, 8rem);
+
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            --space-20: 5rem;
+            --space-24: 6rem;
+
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 1rem;
+            --shadow-paper: 0 2px 8px rgba(31, 20, 5, 0.15), 0 8px 32px rgba(31, 20, 5, 0.08);
+            --shadow-card: 0 4px 20px rgba(31, 20, 5, 0.12), 0 1px 4px rgba(31, 20, 5, 0.08);
+        }
+
+        /* ========================
+   BASE
+======================== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            background: var(--beige);
+            color: var(--ink-dark);
+            overflow-x: hidden;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            font: inherit;
+        }
+
+        /* ========================
+   TEXTURES & OVERLAYS
+======================== */
+        .grain-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-size: 200px;
+        }
+
+        /* ========================
+   RED THREAD DECORATIONS
+======================== */
+        .red-thread {
+            position: absolute;
+            height: 2px;
+            background: var(--red-thread);
+            opacity: 0.7;
+            transform-origin: left center;
+        }
+
+        .thread-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--red-thread);
+            position: absolute;
+            box-shadow: 0 0 4px rgba(192, 57, 43, 0.5);
+        }
+
+        /* ========================
+   STAMPS
+======================== */
+        .stamp {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-lg);
+            font-weight: 400;
+            color: var(--stamp-red);
+            border: 3px solid var(--stamp-red);
+            padding: var(--space-2) var(--space-4);
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            opacity: 0.85;
+            transform: rotate(-8deg);
+            position: relative;
+        }
+
+        .stamp::before {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border: 1px solid var(--stamp-red);
+            opacity: 0.4;
+        }
+
+        .stamp.large {
+            font-size: var(--text-xl);
+            padding: var(--space-3) var(--space-6);
+        }
+
+        .stamp.rotate-pos {
+            transform: rotate(6deg);
+        }
+
+        .stamp.rotate-neg {
+            transform: rotate(-12deg);
+        }
+
+        .stamp.green-stamp {
+            color: var(--archive-green);
+            border-color: var(--archive-green);
+        }
+
+        .stamp.green-stamp::before {
+            border-color: var(--archive-green);
+        }
+
+        /* ========================
+   PAPER CARDS
+======================== */
+        .paper-card {
+            background: var(--paper);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-paper);
+            position: relative;
+            overflow: visible;
+        }
+
+        .paper-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+            border-radius: inherit;
+        }
+
+        .aged-paper {
+            background: var(--aged-paper);
+        }
+
+        /* Paperclip decoration */
+        .paperclip {
+            position: absolute;
+            top: -18px;
+            left: 20px;
+            width: 24px;
+            height: 50px;
+            border: 3px solid #8B8B7A;
+            border-bottom: none;
+            border-radius: 12px 12px 0 0;
+            transform: rotate(-5deg);
+            z-index: 10;
+        }
+
+        .paperclip::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 20px;
+            border: 3px solid #8B8B7A;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+
+        /* Tape decoration */
+        .tape {
+            position: absolute;
+            width: 60px;
+            height: 22px;
+            background: rgba(255, 230, 150, 0.55);
+            backdrop-filter: blur(1px);
+            transform: rotate(-3deg);
+            z-index: 5;
+        }
+
+        .tape-top-center {
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(2deg);
+        }
+
+        .tape-top-left {
+            top: -10px;
+            left: 10%;
+            transform: rotate(-5deg);
+        }
+
+        /* ========================
+   TYPEWRITER TEXT
+======================== */
+        .typewriter {
+            font-family: var(--font-typewriter);
+            color: var(--ink-dark);
+            line-height: 1.7;
+        }
+
+        .handwritten {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            color: var(--ink-dark);
+        }
+
+        /* ========================
+   CLASSIFIED HEADER TEXT
+======================== */
+        .classified-title {
+            font-family: var(--font-typewriter);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* ========================
+   SECTION STYLES
+======================== */
+        section {
+            position: relative;
+        }
+
+        /* ========================
+   SCREEN 1: COVER
+======================== */
+        #screen-cover {
+            min-height: 100vh;
+            background: rgba(86, 12, 14, 1) center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-12) var(--space-6);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #screen-cover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(255, 255, 255, 0.015) 30px, rgba(255, 255, 255, 0.015) 31px),
+                repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(255, 255, 255, 0.015) 30px, rgba(255, 255, 255, 0.015) 31px);
+        }
+
+        .cover-folder {
+            background: linear-gradient(145deg, #C8A86B 0%, #B8945A 40%, #A8844A 100%);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            padding: var(--space-10) var(--space-8);
+            max-width: 560px;
+            width: 100%;
+            position: relative;
+            box-shadow:
+                0 0 0 8px rgba(100, 75, 30, 0.4),
+                0 0 0 10px rgba(80, 55, 20, 0.3),
+                0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .cover-folder::before {
+            content: '';
+            position: absolute;
+            top: -24px;
+            left: 12px;
+            width: 180px;
+            height: 20px;
+            background: linear-gradient(145deg, #D4B06A, #C4A05A);
+            border-radius: 4px 4px 0 0;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-bottom: none;
+        }
+
+        .cover-folder::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(-45deg, transparent, transparent 4px,
+                    rgba(0, 0, 0, 0.03) 4px, rgba(0, 0, 0, 0.03) 5px);
+        }
+
+        .cover-label {
+            background: rgba(252, 250, 247, 0.92);
+            padding: var(--space-8) var(--space-6);
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+        .not-secret {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-sm);
+            color: var(--stamp-red);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-4);
+            opacity: 0.9;
+        }
+
+        .case-number {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-base);
+            color: var(--ink-faint);
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-2);
+        }
+
+        .cover-name {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 900;
+            color: var(--ink-dark);
+            line-height: 0.9;
+            margin-bottom: var(--space-6);
+            letter-spacing: -0.02em;
+        }
+
+        .danger-level {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-2);
+        }
+
+        .stars {
+            color: var(--stamp-red);
+            font-size: var(--text-lg);
+            letter-spacing: 0.1em;
+        }
+
+        .cover-meta {
+            margin-top: var(--space-6);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+            text-align: left;
+        }
+
+        .cover-meta-item {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            line-height: 1.6;
+        }
+
+        .cover-meta-item strong {
+            display: block;
+            color: var(--ink-dark);
+            font-size: var(--text-xs);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .open-btn {
+            margin-top: var(--space-8);
+            background: var(--ink-dark);
+            color: var(--paper);
+            font-family: var(--font-typewriter);
+            font-size: var(--text-sm);
+            letter-spacing: 0.1em;
+            padding: var(--space-4) var(--space-8);
+            border-radius: 1px;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
+            border: 2px solid var(--ink-dark);
+        }
+
+        .open-btn:hover {
+            background: var(--paper);
+            color: var(--ink-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ========================
+   NAV DOTS
+======================== */
+        .nav-dots {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 999;
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(169, 44, 44, 0.3);
+            border: 1px solid rgba(169, 44, 44, 0.6);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-dot.active {
+            background: var(--stamp-red);
+            transform: scale(1.4);
+        }
+
+        .nav-dot:hover {
+            background: var(--stamp-red);
+        }
+
+        /* ========================
+   SCREEN 2: SUSPECT PHOTO
+======================== */
+        #screen-suspect {
+            min-height: 100vh;
+            background: var(--beige);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-16) var(--space-6);
+            gap: var(--space-8);
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        #screen-suspect::before {
+            content: 'ВЕЩЕСТВЕННЫЕ ДОКАЗАТЕЛЬСТВА';
+            position: absolute;
+            top: var(--space-8);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .suspect-photo-frame {
+            position: relative;
+            flex: 0 0 auto;
+            width: min(380px, 90vw);
+        }
+
+        .suspect-photo-wrapper {
+            background: white;
+            padding: var(--space-4) var(--space-4) var(--space-10);
+            box-shadow: var(--shadow-paper);
+            transform: rotate(-2deg);
+            position: relative;
+        }
+
+        .suspect-photo-wrapper img {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            filter: sepia(15%) contrast(1.05);
+            display: block;
+        }
+
+        .photo-caption {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            text-align: center;
+            margin-top: var(--space-3);
+            letter-spacing: 0.1em;
+        }
+
+        .id-card {
+            background: var(--paper);
+            border: 1px solid rgba(44, 36, 22, 0.15);
+            padding: var(--space-6);
+            width: min(340px, 90vw);
+            box-shadow: var(--shadow-card);
+            position: relative;
+        }
+
+        .id-card-header {
+            background: var(--ink-dark);
+            color: var(--paper);
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            letter-spacing: 0.25em;
+            padding: var(--space-2) var(--space-4);
+            margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) var(--space-6);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .id-field {
+            margin-bottom: var(--space-4);
+            border-bottom: 1px solid rgba(44, 36, 22, 0.1);
+            padding-bottom: var(--space-3);
+        }
+
+        .id-field:last-of-type {
+            border-bottom: none;
+        }
+
+        .id-field label {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .id-field span {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-base);
+            color: var(--ink-dark);
+            font-weight: 400;
+        }
+
+        .id-field ul {
+            list-style: none;
+        }
+
+        .id-field ul li {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-sm);
+            color: var(--ink-dark);
+            padding: 2px 0;
+        }
+
+        .id-field ul li::before {
+            content: '— ';
+            color: var(--stamp-red);
+        }
+
+        .id-stamp-wrap {
+            text-align: right;
+            margin-top: var(--space-6);
+        }
+
+        /* ========================
+   SECTION HEADER
+======================== */
+        .section-header {
+            text-align: center;
+            padding: var(--space-12) var(--space-6) var(--space-8);
+        }
+
+        .section-number {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-2);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: var(--text-2xl);
+            color: var(--ink-dark);
+            margin-bottom: var(--space-2);
+        }
+
+        .section-divider {
+            width: 80px;
+            height: 2px;
+            background: var(--stamp-red);
+            margin: var(--space-4) auto 0;
+        }
+
+        /* ========================
+   SCREEN 3: DOSSIER
+======================== */
+        #screen-dossier {
+            background: var(--aged-paper);
+            padding: var(--space-16) var(--space-6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #screen-dossier::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(transparent, transparent 29px,
+                    rgba(44, 36, 22, 0.06) 29px, rgba(44, 36, 22, 0.06) 30px);
+        }
+
+        .dossier-form {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--paper);
+            padding: var(--space-10);
+            position: relative;
+            box-shadow: var(--shadow-paper);
+            border: 1px solid rgba(44, 36, 22, 0.08);
+        }
+
+        .dossier-form-header {
+            border-bottom: 3px double rgba(44, 36, 22, 0.3);
+            padding-bottom: var(--space-4);
+            margin-bottom: var(--space-8);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+        }
+
+        .dossier-form-title {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            color: var(--ink-dark);
+            font-weight: 700;
+        }
+
+        .dossier-form-subtitle {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.1em;
+            margin-top: var(--space-1);
+        }
+
+        .fact-list {
+            list-style: none;
+        }
+
+        .fact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-4);
+            padding: var(--space-4) 0;
+            border-bottom: 1px solid rgba(44, 36, 22, 0.07);
+            font-family: var(--font-typewriter);
+            font-size: var(--text-base);
+            color: var(--ink-dark);
+        }
+
+        .fact-item:last-child {
+            border-bottom: none;
+        }
+
+        .fact-check {
+            color: var(--archive-green);
+            font-size: var(--text-lg);
+            line-height: 1;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .fact-text {
+            line-height: 1.6;
+        }
+
+        /* ========================
+   SCREEN 4: EVIDENCE
+======================== */
+        #screen-evidence {
+            background: var(--beige);
+            padding: var(--space-8) var(--space-6) var(--space-16);
+        }
+
+        .evidence-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+            gap: var(--space-8);
+            padding: 0 var(--space-4);
+        }
+
+        .evidence-card {
+            background: var(--paper);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-card);
+            position: relative;
+        }
+
+        .evidence-number {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--stamp-red);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-3);
+        }
+
+        .evidence-img-wrap {
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            margin-bottom: var(--space-4);
+            background: var(--aged-paper);
+            position: relative;
+        }
+
+        .evidence-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(20%) contrast(1.05);
+        }
+
+        .evidence-caption {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-sm);
+            color: var(--ink-dark);
+            line-height: 1.6;
+            margin-bottom: var(--space-3);
+        }
+
+        .evidence-motive {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            border-top: 1px solid rgba(44, 36, 22, 0.1);
+            padding-top: var(--space-3);
+        }
+
+        .evidence-motive strong {
+            color: var(--stamp-red);
+        }
+
+        /* Meme card special */
+        .meme-card {
+            background: var(--ink-dark);
+            color: var(--paper);
+            padding: var(--space-6);
+            text-align: center;
+            font-family: var(--font-typewriter);
+            position: relative;
+        }
+
+        .meme-text-big {
+            font-size: var(--text-lg);
+            font-weight: 400;
+            margin-bottom: var(--space-3);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .meme-arrow {
+            font-size: 2rem;
+            margin: var(--space-2) 0;
+        }
+
+        .meme-text-result {
+            font-size: var(--text-base);
+            color: rgba(255, 200, 100, 0.9);
+        }
+
+        /* ========================
+   SCREEN 5: TIMELINE
+======================== */
+        #screen-timeline {
+            background: var(--graphite);
+            padding: var(--space-16) var(--space-6);
+            position: relative;
+            overflow: hidden;
+            color: var(--paper);
+        }
+
+        #screen-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--red-thread) 5%, var(--red-thread) 95%, transparent);
+            transform: translateX(-50%);
+        }
+
+        .timeline-title {
+            color: var(--paper);
+        }
+
+        .timeline-subtitle {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.2em;
+        }
+
+        .timeline {
+            max-width: 760px;
+            margin: var(--space-12) auto 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-12);
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 60px 1fr;
+            align-items: center;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            grid-column: 1;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            grid-column: 2;
+        }
+
+        .timeline-item:nth-child(even) .timeline-year {
+            grid-column: 3;
+            text-align: left;
+            padding-left: var(--space-4);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            grid-column: 3;
+            text-align: left;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-dot {
+            grid-column: 2;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-year {
+            grid-column: 1;
+            text-align: right;
+            padding-right: var(--space-4);
+        }
+
+        .timeline-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--stamp-red);
+            border: 3px solid var(--graphite);
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 12px rgba(192, 57, 43, 0.5);
+        }
+
+        .timeline-year {
+            font-family: var(--font-display);
+            font-size: var(--text-2xl);
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.08);
+            line-height: 1;
+            align-self: center;
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: var(--space-4) var(--space-6);
+        }
+
+        .timeline-event {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-base);
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: var(--space-2);
+        }
+
+        .timeline-crime {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--stamp-red);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .timeline-crime-text {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-sm);
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        /* ========================
+   SCREEN 6: INTERROGATION
+======================== */
+        #screen-interrogation {
+            background: var(--aged-paper);
+            padding: var(--space-16) var(--space-6);
+            position: relative;
+        }
+
+        .interrogation-wrapper {
+            max-width: 660px;
+            margin: 0 auto;
+        }
+
+        .interrogation-header {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: var(--space-10);
+            border-bottom: 1px solid rgba(44, 36, 22, 0.15);
+            padding-bottom: var(--space-4);
+        }
+
+        .dialogue {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        .dialogue-line {
+            display: flex;
+            gap: var(--space-4);
+            position: relative;
+        }
+
+        .dialogue-speaker {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            min-width: 100px;
+            flex-shrink: 0;
+            padding-top: 3px;
+        }
+
+        .dialogue-speaker.investigator {
+            color: var(--stamp-red);
+        }
+
+        .dialogue-bubble {
+            background: var(--paper);
+            padding: var(--space-4) var(--space-5);
+            font-family: var(--font-typewriter);
+            font-size: var(--text-base);
+            color: var(--ink-dark);
+            line-height: 1.7;
+            box-shadow: var(--shadow-card);
+            flex: 1;
+            position: relative;
+        }
+
+        /* ========================
+   SCREEN 7: PSYCHOLOGICAL PORTRAIT
+======================== */
+        #screen-psych {
+            background: var(--beige);
+            padding: var(--space-16) var(--space-6);
+        }
+
+        .expert-report {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--paper);
+            padding: var(--space-10);
+            box-shadow: var(--shadow-paper);
+            position: relative;
+        }
+
+        .expert-report-header {
+            text-align: center;
+            border-bottom: 2px solid rgba(44, 36, 22, 0.15);
+            padding-bottom: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .expert-title {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            color: var(--ink-dark);
+            margin-bottom: var(--space-2);
+        }
+
+        .expert-subtitle {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.1em;
+        }
+
+        .trait-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .trait-group h3 {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--stamp-red);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-4);
+        }
+
+        .trait-item {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-sm);
+            color: var(--ink-dark);
+            padding: var(--space-2) 0;
+            border-bottom: 1px dotted rgba(44, 36, 22, 0.12);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .trait-plus {
+            color: var(--archive-green);
+            font-size: var(--text-base);
+        }
+
+        .trait-minus {
+            color: var(--stamp-red);
+        }
+
+        .not-found-box {
+            background: var(--aged-paper);
+            border: 1px dashed rgba(44, 36, 22, 0.2);
+            padding: var(--space-4) var(--space-6);
+            font-family: var(--font-typewriter);
+            font-size: var(--text-sm);
+            color: var(--ink-faint);
+            font-style: italic;
+            text-align: center;
+            margin-top: var(--space-4);
+        }
+
+        .expert-stamp-wrap {
+            text-align: center;
+            margin-top: var(--space-8);
+        }
+
+        /* ========================
+   SCREEN 8: SECRET ROOM
+======================== */
+        #screen-memories {
+            background: var(--graphite);
+            padding: var(--space-16) var(--space-6);
+            color: var(--paper);
+        }
+
+        .memories-intro {
+            max-width: 600px;
+            margin: 0 auto var(--space-12);
+            text-align: center;
+        }
+
+        .memories-intro p {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-base);
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.8;
+            margin-top: var(--space-6);
+        }
+
+        .memories-intro strong {
+            display: block;
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            color: var(--paper);
+            font-style: italic;
+            margin-top: var(--space-4);
+        }
+
+        .memories-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+            gap: var(--space-6);
+        }
+
+        .memory-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: var(--space-6);
+            position: relative;
+        }
+
+        .memory-number {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--stamp-red);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-3);
+        }
+
+        .memory-title {
+            font-family: var(--font-display);
+            font-size: var(--text-lg);
+            color: rgba(255, 255, 255, 0.85);
+            font-style: italic;
+            margin-bottom: var(--space-3);
+        }
+
+        .memory-text {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-sm);
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.7;
+        }
+
+        /* ========================
+   SCREEN 9: LETTER
+======================== */
+        #screen-letter {
+            background: var(--beige);
+            padding: var(--space-20) var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .letter-paper {
+            max-width: 600px;
+            width: 100%;
+            background: var(--paper);
+            padding: var(--space-12) var(--space-10);
+            box-shadow: var(--shadow-paper);
+            position: relative;
+        }
+
+        .letter-paper::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 1px solid rgba(44, 36, 22, 0.06);
+            pointer-events: none;
+        }
+
+        .letter-stamp {
+            position: absolute;
+            top: var(--space-6);
+            right: var(--space-6);
+        }
+
+        .letter-heading {
+            font-family: var(--font-display);
+            font-size: var(--text-lg);
+            color: var(--ink-faint);
+            margin-bottom: var(--space-8);
+            font-style: italic;
+        }
+
+        .letter-salutation {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--ink-dark);
+            margin-bottom: var(--space-6);
+        }
+
+        .letter-body {
+            font-family: var(--font-display);
+            font-size: var(--text-base);
+            color: var(--ink-dark);
+            line-height: 1.9;
+            font-style: italic;
+        }
+
+        .letter-body p {
+            margin-bottom: var(--space-6);
+            max-width: 100%;
+        }
+
+        .letter-signature {
+            margin-top: var(--space-8);
+            font-family: var(--font-display);
+            font-size: var(--text-lg);
+            color: var(--ink-dark);
+            font-style: italic;
+        }
+
+        /* ========================
+   SCREEN 10: VERDICT
+======================== */
+        #screen-verdict {
+            min-height: 100vh;
+            background: var(--ink-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-16) var(--space-6);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #screen-verdict::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(169, 44, 44, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(169, 44, 44, 0.1) 0%, transparent 50%);
+        }
+
+        .verdict-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+
+        .verdict-seal {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--stamp-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-8);
+            position: relative;
+        }
+
+        .verdict-seal::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 50%;
+            border: 2px solid rgba(169, 44, 44, 0.4);
+        }
+
+        .verdict-seal-icon {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+
+        .court-heading {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-4);
+        }
+
+        .verdict-title {
+            font-family: var(--font-display);
+            font-size: var(--text-2xl);
+            color: var(--paper);
+            font-weight: 900;
+            margin-bottom: var(--space-10);
+            line-height: 1.1;
+        }
+
+        .verdict-list {
+            list-style: none;
+            text-align: left;
+            display: inline-block;
+            margin-bottom: var(--space-10);
+        }
+
+        .verdict-item {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-base);
+            color: rgba(255, 255, 255, 0.7);
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .verdict-check {
+            color: var(--archive-green);
+        }
+
+        .guilty-stamp {
+            font-family: var(--font-typewriter);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: var(--stamp-red);
+            border: 4px solid var(--stamp-red);
+            padding: var(--space-3) var(--space-8);
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transform: rotate(-5deg);
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .guilty-stamp::before {
+            content: '';
+            position: absolute;
+            inset: 6px;
+            border: 2px solid rgba(169, 44, 44, 0.4);
+        }
+
+        /* ========================
+   SCREEN 11: CERTIFICATE
+======================== */
+        #screen-certificate {
+            background: linear-gradient(180deg, var(--paper) 0%, var(--beige) 100%);
+            padding: var(--space-16) var(--space-6);
+            text-align: center;
+        }
+
+        .cert-evidence-number {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--stamp-red);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-4);
+        }
+
+        .cert-finding {
+            max-width: 500px;
+            margin: 0 auto var(--space-10);
+            font-family: var(--font-typewriter);
+            font-size: var(--text-base);
+            color: var(--ink-faint);
+            line-height: 1.8;
+        }
+
+        .cert-finding strong {
+            color: var(--ink-dark);
+        }
+
+        .book-certificate {
+            max-width: 500px;
+            margin: 0 auto var(--space-10);
+            background: var(--paper);
+            border: 2px solid rgba(44, 36, 22, 0.12);
+            padding: var(--space-10) var(--space-8);
+            position: relative;
+            box-shadow:
+                0 0 0 6px var(--beige),
+                0 0 0 8px rgba(44, 36, 22, 0.08),
+                var(--shadow-paper);
+        }
+
+        .book-certificate::before {
+            content: '📚';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            background: var(--beige);
+            padding: 0 var(--space-2);
+        }
+
+        .cert-ornament {
+            font-family: var(--font-display);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-6);
+        }
+
+        .cert-title {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: 900;
+            color: var(--ink-dark);
+            margin-bottom: var(--space-4);
+        }
+
+        .cert-recipient-label {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-2);
+        }
+
+        .cert-recipient {
+            font-family: var(--font-display);
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            font-style: italic;
+            color: var(--ink-dark);
+            border-bottom: 2px solid rgba(44, 36, 22, 0.15);
+            padding-bottom: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .cert-description {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-sm);
+            color: var(--ink-faint);
+            line-height: 1.7;
+            margin-bottom: var(--space-8);
+        }
+
+        .cert-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid rgba(44, 36, 22, 0.1);
+            padding-top: var(--space-4);
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+        }
+
+        .cert-signature {
+            font-family: var(--font-display);
+            font-size: var(--text-base);
+            font-style: italic;
+            color: var(--ink-dark);
+            margin-top: var(--space-2);
+        }
+
+        .get-cert-btn {
+            background: var(--ink-dark);
+            color: var(--paper);
+            font-family: var(--font-typewriter);
+            font-size: var(--text-sm);
+            letter-spacing: 0.1em;
+            padding: var(--space-4) var(--space-10);
+            border: 2px solid var(--ink-dark);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .get-cert-btn:hover {
+            background: transparent;
+            color: var(--ink-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-card);
+        }
+
+        /* ========================
+   SCROLL ANIMATIONS
+======================== */
+        .fade-in {
+            opacity: 1;
+        }
+
+        @supports (animation-timeline: scroll()) {
+            .fade-in {
+                opacity: 0;
+                animation: fade-reveal linear both;
+                animation-timeline: view();
+                animation-range: entry 0% entry 60%;
+            }
+
+            @keyframes fade-reveal {
+                to {
+                    opacity: 1;
+                }
+            }
+        }
+
+        /* ========================
+   BOARD OF INVESTIGATION (meme)
+======================== */
+        .investigation-board {
+            max-width: 800px;
+            margin: 0 auto var(--space-10);
+            background: #2A2A2A;
+            padding: var(--space-8);
+            position: relative;
+            border: 4px solid #3A3A3A;
+            box-shadow: var(--shadow-paper);
+        }
+
+        .board-title {
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .board-nodes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            min-height: 140px;
+        }
+
+        .board-node {
+            background: var(--paper);
+            padding: var(--space-3) var(--space-4);
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--ink-dark);
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+            transform: rotate(var(--rot, 0deg));
+            position: relative;
+        }
+
+        .board-node::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--stamp-red);
+            box-shadow: 0 0 6px rgba(192, 57, 43, 0.6);
+        }
+
+        .board-center {
+            font-family: var(--font-display);
+            font-size: var(--text-lg);
+            font-weight: 900;
+            color: var(--paper);
+            text-align: center;
+            background: var(--stamp-red);
+            padding: var(--space-4) var(--space-6);
+            box-shadow: 0 0 20px rgba(192, 57, 43, 0.4);
+        }
+
+        .board-arrows {
+            text-align: center;
+            font-family: var(--font-typewriter);
+            font-size: var(--text-xs);
+            color: var(--stamp-red);
+            margin-top: var(--space-4);
+            letter-spacing: 0.1em;
+        }
+
+        /* ========================
+   RESPONSIVE
+======================== */
+        @media (max-width: 640px) {
+            #screen-suspect {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr 40px 1fr;
+            }
+
+            .timeline-year {
+                font-size: var(--text-xl);
+            }
+
+            .trait-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-year,
+            .timeline-item:nth-child(even) .timeline-year {
+                display: none;
+            }
+
+            .cover-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .letter-paper {
+                padding: var(--space-8) var(--space-6);
+            }
+
+            .dialogue-speaker {
+                min-width: 70px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cover-folder {
+                padding: var(--space-8) var(--space-4);
+            }
+
+            .cover-label {
+                padding: var(--space-6) var(--space-4);
+            }
+        }
+
+        /* ========================
+   CONFETTI ANIMATION
+======================== */
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti-piece {
+            position: fixed;
+            top: -20px;
+            width: 8px;
+            height: 8px;
+            animation: confetti-fall linear forwards;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* ========================
+   LEVEL INDICATOR (meme)
+======================== */
+        .level-indicator {
+            max-width: 500px;
+            margin: var(--space-8) auto 0;
+            background: var(--paper);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-card);
+            font-family: var(--font-typewriter);
+        }
+
+        .level-label {
+            font-size: var(--text-xs);
+            color: var(--ink-faint);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-3);
+        }
+
+        .level-bar-wrap {
+            height: 28px;
+            background: rgba(44, 36, 22, 0.08);
+            border: 1px solid rgba(44, 36, 22, 0.12);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .level-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--archive-green) 0%, var(--stamp-red) 100%);
+            width: 0%;
+            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .level-bar-text {
+            position: absolute;
+            right: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: var(--text-xs);
+            color: var(--paper);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grain-overlay"></div>
+
+    <!-- NAV DOTS -->
+    <nav class="nav-dots" aria-label="Навигация по делу">
+        <button class="nav-dot active" data-screen="0" title="Обложка"></button>
+        <button class="nav-dot" data-screen="1" title="Подозреваемая"></button>
+        <button class="nav-dot" data-screen="2" title="Досье"></button>
+        <button class="nav-dot" data-screen="3" title="Улики"></button>
+        <button class="nav-dot" data-screen="4" title="Хронология"></button>
+        <button class="nav-dot" data-screen="5" title="Допрос"></button>
+        <button class="nav-dot" data-screen="6" title="Портрет"></button>
+        <button class="nav-dot" data-screen="7" title="Воспоминания"></button>
+        <button class="nav-dot" data-screen="8" title="Письмо"></button>
+        <button class="nav-dot" data-screen="9" title="Вердикт"></button>
+        <button class="nav-dot" data-screen="10" title="Сертификат"></button>
+    </nav>
+
+    <!-- ===========================
+     SCREEN 1: COVER
+=========================== -->
+    <section id="screen-cover" data-screen="0">
+        <div class="cover-folder">
+            <div class="cover-label">
+                <div class="not-secret">⚠️ СОВЕРШЕННО НЕ СЕКРЕТНО</div>
+                <div class="case-number">ДЕЛО №&nbsp;23</div>
+                <div class="cover-name">РИТА</div>
+                <div class="danger-level">Уровень опасности:</div>
+                <div class="stars">★★★★★</div>
+
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <strong>Открыто:</strong>
+                        В день рождения
+                    </div>
+                    <div class="cover-meta-item">
+                        <strong>Основание:</strong>
+                        Слишком хорошая подруга
+                    </div>
+                    <div class="cover-meta-item">
+                        <strong>Статус:</strong>
+                        <span style="color: var(--stamp-red)">Активное</span>
+                    </div>
+                    <div class="cover-meta-item">
+                        <strong>Следователь:</strong>
+                        Засекречено
+                    </div>
+                </div>
+            </div>
+
+            <button class="open-btn" onclick="scrollToScreen(1)">
+                🔍 ОТКРЫТЬ МАТЕРИАЛЫ ДЕЛА
+            </button>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCREEN 2: SUSPECT PHOTO
+=========================== -->
+    <section id="screen-suspect" data-screen="1">
+        <div class="suspect-photo-frame fade-in">
+            <div class="suspect-photo-wrapper">
+                <img src="photorita.jpg" alt="Фото подозреваемой" width="380" height="507" loading="lazy">
+                <div class="photo-caption">ФОТ. №23-А · ВЕЩЕСТВЕННОЕ ДОК-ВО</div>
+            </div>
+            <div style="text-align: right; margin-top: var(--space-4);">
+                <div class="stamp large rotate-neg">ОСОБО ОПАСНА</div>
+            </div>
+        </div>
+
+        <div class="id-card fade-in">
+            <div class="id-card-header">
+                <span>ЛИЧНОЕ ДЕЛО</span>
+                <span>№ 23</span>
+            </div>
+
+            <div class="id-field">
+                <label>Имя</label>
+                <span>Рита</span>
+            </div>
+            <div class="id-field">
+                <label>Возраст</label>
+                <span>23</span>
+            </div>
+            <div class="id-field">
+                <label>Рост</label>
+                <span>174</span>
+            </div>
+            <div class="id-field">
+                <label>Цвет волос</label>
+                <span>блондинка</span>
+            </div>
+            <div class="id-field">
+                <label>Особые приметы</label>
+                <ul>
+                    <li>слишком красивая</li>
+                    <li>слишком умная</li>
+                    <li>слишком любит книги</li>
+                </ul>
+            </div>
+
+            <div class="id-stamp-wrap">
+                <div class="stamp rotate-pos">Подозреваемая</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCREEN 3: DOSSIER
+=========================== -->
+    <section id="screen-dossier" data-screen="2">
+        <div class="section-header">
+            <div class="section-number">Материал 03</div>
+            <h2 class="section-title">Досье. Установленные факты</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="dossier-form fade-in">
+            <div class="paperclip"></div>
+            <div class="dossier-form-header">
+                <div>
+                    <div class="dossier-form-title">Анкета подозреваемой</div>
+                    <div class="dossier-form-subtitle">Форма 23-Б · Следственный отдел</div>
+                </div>
+                <div class="stamp" style="position: static;">Конфиденц.</div>
+            </div>
+
+            <ul class="fact-list">
+                <li class="fact-item">
+                    <span class="fact-check">✔</span>
+                    <span class="fact-text">Замечена в книжных магазинах — систематически, без видимых причин</span>
+                </li>
+                <li class="fact-item">
+                    <span class="fact-check">✔</span>
+                    <span class="fact-text">Способна читать до глубокой ночи, игнорируя режим сна</span>
+                </li>
+                <li class="fact-item">
+                    <span class="fact-check">✔</span>
+                    <span class="fact-text">Знает больше о преступлениях, чем следователь (подозрительно)</span>
+                </li>
+                <li class="fact-item">
+                    <span class="fact-check">✔</span>
+                    <span class="fact-text">Слушает Ваню Дмитриенко — возможный сообщник</span>
+                </li>
+                <li class="fact-item">
+                    <span class="fact-check">✔</span>
+                    <span class="fact-text">Вызывает привыкание у друзей — необратимое</span>
+                </li>
+            </ul>
+
+            <!-- Investigation board meme -->
+            <div style="margin-top: var(--space-10);">
+                <div class="investigation-board">
+                    <div class="board-title">🗂 Доска расследования — все следы ведут к...</div>
+                    <div class="board-nodes">
+                        <div class="board-node" style="--rot: -4deg">Ещё одна<br>книга</div>
+                        <div class="board-node" style="--rot: 3deg">Ночь без сна</div>
+                        <div style="text-align:center">
+                            <div style="color: var(--stamp-red); font-size: 1.5rem; font-family: var(--font-typewriter);">→→→→</div>
+                        </div>
+                        <div class="board-center">📚 КНИГАМ</div>
+                        <div style="text-align:center">
+                            <div style="color: var(--stamp-red); font-size: 1.5rem; font-family: var(--font-typewriter);">←←←←</div>
+                        </div>
+                        <div class="board-node" style="--rot: 5deg">True Crime<br>подкаст</div>
+                        <div class="board-node" style="--rot: -2deg">Книжный<br>магазин</div>
+                    </div>
+                    <div class="board-arrows">↑ Все стрелки ведут к одному и тому же ↑</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCREEN 4: EVIDENCE
+=========================== -->
+    <section id="screen-evidence" data-screen="3">
+        <div class="section-header">
+            <div class="section-number">Материал 04</div>
+            <h2 class="section-title">Вещественные улики</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <!-- Meme: last book -->
+        <div style="max-width:500px; margin: 0 auto var(--space-8); padding: 0 var(--space-4);" class="fade-in">
+            <div class="meme-card paper-card" style="background: var(--ink-dark);">
+                <div class="tape tape-top-center"></div>
+                <div style="font-family: var(--font-typewriter); font-size: var(--text-xs); color: rgba(255,255,255,0.35); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: var(--space-4);">КРИМИНАЛЬНЫЙ МЕМ · ДЕЛО №23</div>
+                <div class="meme-text-big">"Я куплю только<br>одну книгу"</div>
+                <div class="meme-arrow">↓</div>
+                <div class="meme-text-result">📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚</div>
+            </div>
+        </div>
+
+        <div class="evidence-grid">
+            <!-- Evidence 1 -->
+            <div class="evidence-card paper-card fade-in">
+                <div class="paperclip"></div>
+                <div class="evidence-number">Улика №1</div>
+                <div class="evidence-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=80" alt="Книга — вещественное доказательство" width="260" height="195" loading="lazy">
+                </div>
+                <div class="evidence-caption">
+                    Подозреваемая была замечена за покупкой очередной книги.
+                </div>
+                <div class="evidence-motive">
+                    <strong>Мотив:</strong> "ну эта последняя"
+                </div>
+            </div>
+
+            <!-- Evidence 2 -->
+            <div class="evidence-card paper-card fade-in">
+                <div class="evidence-number">Улика №2</div>
+                <div class="evidence-img-wrap">
+                    <img src="https://ru.volna.top/wp-content/uploads/%D0%92%D0%B0%D0%BD%D1%8F-%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B5%D0%BD%D0%BA%D0%BE-2.jpg" alt="Наушники — вещественное доказательство" width="260" height="195" loading="lazy">
+                </div>
+                <div class="evidence-caption">
+                    Прослушивала Ваню Дмитриенко в наушниках.
+                </div>
+                <div class="evidence-motive">
+                    <strong>Поведение:</strong> слишком довольная.
+                </div>
+            </div>
+
+            <!-- Evidence 3 -->
+            <div class="evidence-card paper-card fade-in">
+                <div class="evidence-number">Улика №3</div>
+                <div class="evidence-img-wrap">
+                    <img src="photosrita.jpg" alt="Совместное фото" width="260" height="195" loading="lazy">
+                </div>
+                <div class="evidence-caption">
+                    Подозреваемая вызывает неконтролируемое хорошее настроение.
+                </div>
+                <div class="evidence-motive">
+                    <strong>Заключение:</strong> опасна. Рекомендуется держать рядом.
+                </div>
+            </div>
+        </div>
+
+        <!-- Level indicator meme -->
+        <div class="level-indicator fade-in" id="level-indicator">
+            <div class="level-label">Уровень подозрительности подозреваемой</div>
+            <div class="level-bar-wrap">
+                <div class="level-bar-fill" id="level-bar">
+                    <div class="level-bar-text">МАКСИМУМ</div>
+                </div>
+            </div>
+            <div style="font-family: var(--font-typewriter); font-size: var(--text-xs); color: var(--ink-faint); margin-top: var(--space-3);">
+                Примечание: шкала была специально расширена для данного случая
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCREEN 5: TIMELINE
+=========================== -->
+    <section id="screen-timeline" data-screen="4">
+        <div class="section-header" style="position:relative; z-index:2;">
+            <div class="section-number" style="color: rgba(255,255,255,0.3);">Материал 05</div>
+            <h2 class="section-title" style="color: var(--paper);">Хронология преступлений</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item fade-in">
+                <div class="timeline-year">2003</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-event">Появилась на свет</div>
+                    <div class="timeline-crime">ПРЕСТУПЛЕНИЕ:</div>
+                    <div class="timeline-crime-text">Украла сердца родственников</div>
+                </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-content" style="grid-column:1; text-align:right;">
+                    <div class="timeline-event">Освоила чтение</div>
+                    <div class="timeline-crime" style="text-align:right;">ПРЕСТУПЛЕНИЕ:</div>
+                    <div class="timeline-crime-text">Уничтожение свободного времени</div>
+                </div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-year" style="grid-column:3; text-align:left; padding-left: var(--space-4);">2010</div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-year">2020</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-event">Заинтересовалась True Crime</div>
+                    <div class="timeline-crime">ПРЕСТУПЛЕНИЕ:</div>
+                    <div class="timeline-crime-text">Слишком много знает</div>
+                </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-content" style="grid-column:1; text-align:right;">
+                    <div class="timeline-event">Достигла 23 уровня 🎂</div>
+                    <div class="timeline-crime" style="text-align:right;">ПРЕСТУПЛЕНИЕ:</div>
+                    <div class="timeline-crime-text">Продолжает быть великолепной</div>
+                </div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-year" style="grid-column:3; text-align:left; padding-left: var(--space-4);">2026</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCREEN 6: INTERROGATION
+=========================== -->
+    <section id="screen-interrogation" data-screen="5">
+        <div class="section-header">
+            <div class="section-number">Материал 06</div>
+            <h2 class="section-title">Протокол допроса</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="interrogation-wrapper">
+            <div class="interrogation-header">
+                ДАТА: [ЗАСЕКРЕЧЕНО] · МЕСТО: СЛЕДСТВЕННАЯ КОМНАТА №23 · СТАТУС: ОСОБО ВАЖНОЕ
+            </div>
+
+            <div class="dialogue">
+                <div class="dialogue-line fade-in">
+                    <div class="dialogue-speaker investigator">Следователь</div>
+                    <div class="dialogue-bubble">
+                        Что вы можете сказать о Рите?
+                    </div>
+                </div>
+
+                <div class="dialogue-line fade-in">
+                    <div class="dialogue-speaker">Свидетель</div>
+                    <div class="dialogue-bubble">
+                        Очень подозрительная.<br>Постоянно помогает людям.
+                    </div>
+                </div>
+
+                <div class="dialogue-line fade-in">
+                    <div class="dialogue-speaker investigator">Следователь</div>
+                    <div class="dialogue-bubble">
+                        Чем занимается в свободное время?
+                    </div>
+                </div>
+
+                <div class="dialogue-line fade-in">
+                    <div class="dialogue-speaker">Свидетель</div>
+                    <div class="dialogue-bubble">
+                        Читает книги и раскрывает преступления на диване.
+                    </div>
+                </div>
+
+                <div class="dialogue-line fade-in">
+                    <div class="dialogue-speaker investigator">Следователь</div>
+                    <div class="dialogue-bubble">
+                        Опасна?
+                    </div>
+                </div>
+
+                <div class="dialogue-line fade-in">
+                    <div class="dialogue-speaker">Свидетель</div>
+                    <div class="dialogue-bubble" style="border-left: 3px solid var(--stamp-red);">
+                        <strong>Да.</strong><br><br>
+                        Можно привязаться.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCREEN 7: PSYCH PORTRAIT
+=========================== -->
+    <section id="screen-psych" data-screen="6">
+        <div class="section-header">
+            <div class="section-number">Материал 07</div>
+            <h2 class="section-title">Психологический портрет</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="expert-report fade-in">
+            <div class="paperclip"></div>
+            <div class="tape tape-top-left"></div>
+
+            <div class="expert-report-header">
+                <div class="expert-title">Заключение экспертов</div>
+                <div class="expert-subtitle">Дело №23 · Гриф: «Совершенно не секретно»</div>
+            </div>
+
+            <div class="trait-grid">
+                <div class="trait-group">
+                    <h3>Положительные характеристики</h3>
+                    <div class="trait-item"><span class="trait-plus">+</span> высокий уровень доброты</div>
+                    <div class="trait-item"><span class="trait-plus">+</span> развитое чувство юмора</div>
+                    <div class="trait-item"><span class="trait-plus">+</span> любовь к книгам</div>
+                    <div class="trait-item"><span class="trait-plus">+</span> хороший вкус</div>
+                    <div class="trait-item"><span class="trait-plus">+</span> красивая внешность</div>
+                </div>
+                <div class="trait-group">
+                    <h3>Отрицательные характеристики</h3>
+                    <div class="not-found-box">
+                        Минусы не обнаружены<br>
+                        <span style="font-size: var(--text-xs); opacity:0.6;">(Следствие продолжается)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="expert-stamp-wrap">
+                <div class="stamp large" style="color: var(--archive-green); border-color: var(--archive-green);">✓ ПРОВЕРЕНО</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCREEN 8: MEMORIES
+=========================== -->
+    <section id="screen-memories" data-screen="7">
+        <div class="section-header" style="position:relative;z-index:2;">
+            <div class="section-number" style="color:rgba(255,255,255,0.3);">Материал 08</div>
+            <h2 class="section-title" style="color:var(--paper);">Тайная комната</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="memories-intro fade-in">
+            <p>Материалы расследования показали:</p>
+            <strong>Рита — один из самых важных людей в моей жизни.</strong>
+        </div>
+
+        <div class="memories-grid">
+            <div class="memory-card fade-in">
+                <div class="memory-number">Любимый момент №1</div>
+                <div class="memory-title">Когда всё началось</div>
+                <div class="memory-text">
+                    Тот день, когда ты появилась и мир стал немного лучше. Это произошло когда я устроилась в шарашкину контору и ты просто вошла — и осталась навсегда.
+                </div>
+            </div>
+
+            <div class="memory-card fade-in">
+                <div class="memory-number">Любимый момент №2</div>
+                <div class="memory-title">Смешной случай</div>
+                <div class="memory-text">
+                    Каждый раз, когда мы смеемся до слёз из-за такой глупости, что потом даже не можем объяснить почему. Лучшее.
+                </div>
+            </div>
+
+            <div class="memory-card fade-in">
+                <div class="memory-number">Любимый момент №3</div>
+                <div class="memory-title">За что я тебя люблю</div>
+                <div class="memory-text">
+                    За то, что ты просто ты. За честность, за смех, за поддержку в самые странные моменты. За разговоры до утра.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCREEN 9: LETTER
+=========================== -->
+    <section id="screen-letter" data-screen="8">
+        <div class="letter-paper fade-in">
+            <div class="letter-stamp">
+                <div class="stamp" style="transform:rotate(12deg); font-size:var(--text-xs);">Лично</div>
+            </div>
+
+            <div class="letter-heading">Особо важный документ · Дело №23</div>
+            <h2 class="letter-salutation">Личное письмо следователя</h2>
+
+            <div class="letter-body">
+                <p>Рита,</p>
+                <p>за всеми этими материалами дела, штампами и молоточками скрывается простой факт.</p>
+                <p>Я очень рада, что ты есть в моей жизни.</p>
+                <p>Спасибо тебе за поддержку, смех, разговоры и воспоминания, которые останутся со мной навсегда.</p>
+                <p>Пусть 23-й год принесёт тебе столько счастья, сколько ты даришь окружающим — а это, как следствие установило, очень много.</p>
+            </div>
+
+            <div class="letter-signature">
+                С любовью,<br>твой тайный следователь 🕵️‍♀️
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCREEN 10: VERDICT
+=========================== -->
+    <section id="screen-verdict" data-screen="9">
+        <div class="verdict-inner fade-in">
+            <div class="verdict-seal">
+                <div class="verdict-seal-icon">⚖️</div>
+            </div>
+
+            <div class="court-heading">Именем Следствия · Дело №23</div>
+            <h2 class="verdict-title">СУД ПОСТАНОВИЛ</h2>
+
+            <ul class="verdict-list">
+                <li class="verdict-item"><span class="verdict-check">✓</span> быть прекрасной подругой</li>
+                <li class="verdict-item"><span class="verdict-check">✓</span> делать жизнь интереснее</li>
+                <li class="verdict-item"><span class="verdict-check">✓</span> вызывать улыбки везде и всегда</li>
+                <li class="verdict-item"><span class="verdict-check">✓</span> украшать этот мир своим присутствием</li>
+            </ul>
+
+            <div>
+                <div class="guilty-stamp">ВИНОВНА</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCREEN 11: CERTIFICATE
+=========================== -->
+    <section id="screen-certificate" data-screen="10">
+        <div class="section-header">
+            <div class="section-number">Материал 11 · Финальный</div>
+            <h2 class="section-title">Вещественное доказательство №23</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="cert-finding fade-in">
+            <strong>Следствие установило:</strong><br>
+            подозреваемая крайне опасно любит книги.<br><br>
+            В качестве меры пресечения назначается покупка новых книг.
+        </div>
+
+        <div class="book-certificate fade-in">
+            <div class="cert-ornament">— — — подарочный сертификат — — —</div>
+            <div class="cert-title">КНИЖНЫЙ СЕРТИФИКАТ</div>
+
+            <div class="cert-recipient-label">Выдан подозреваемой</div>
+            <div class="cert-recipient">Рите</div>
+
+            <div class="cert-description">
+                Настоящим подтверждается право на покупку любых книг на выбор.<br>
+                Ограничений по жанру нет.<br>
+                Возможно включение True Crime.<br>
+                Срок действия: бессрочно.
+            </div>
+
+            <div class="cert-footer">
+                <div>
+                    <div>Дата выдачи</div>
+                    <div class="cert-signature">День рождения ✦</div>
+                </div>
+                <div style="text-align:right;">
+                    <div>Следователь</div>
+                    <div class="cert-signature">Засекречено 🕵️‍♀️</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin-bottom: var(--space-12);">
+            <a href="https://www.chitai-gorod.ru/certificate/1250002128298?pin=9574335177344">
+            <button class="get-cert-btn" onclick="celebrate()">
+                📚 ПОЛУЧИТЬ ВЕЩЕСТВЕННОЕ ДОКАЗАТЕЛЬСТВО
+            </button>
+            </a>
+        </div>
+
+        <div style="text-align:center; padding-bottom: var(--space-12);">
+            <div style="font-family: var(--font-typewriter); font-size: var(--text-xs); color: var(--ink-faint); letter-spacing: 0.2em;">
+                ДЕЛО №23 · ЗАКРЫТО · ВЫВОДЫ: РИТА ВИНОВНА В ТОМ, ЧТО ОНА ВЕЛИКОЛЕПНА
+            </div>
+        </div>
+    </section>
+
+    <!-- ===========================
+     SCRIPTS
+=========================== -->
+    <script>
+        // Nav dots
+        const sections = document.querySelectorAll('section[data-screen]');
+        const navDots = document.querySelectorAll('.nav-dot');
+
+        function scrollToScreen(idx) {
+            sections[idx].scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        navDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const idx = parseInt(dot.dataset.screen);
+                scrollToScreen(idx);
+            });
+        });
+
+        // Update active nav dot on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const idx = entry.target.dataset.screen;
+                    navDots.forEach(d => d.classList.remove('active'));
+                    navDots[idx]?.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.4
+        });
+
+        sections.forEach(s => observer.observe(s));
+
+        // Level bar animation
+        const levelObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        document.getElementById('level-bar').style.width = '98%';
+                    }, 300);
+                    levelObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.5
+        });
+
+        const levelIndicator = document.getElementById('level-indicator');
+        if (levelIndicator) levelObserver.observe(levelIndicator);
+
+        // Confetti celebration
+        function celebrate() {
+            const colors = ['#A92C2C', '#6E7C72', '#C8A86B', '#1F1F1F', '#FCFAF7', '#C0392B'];
+            for (let i = 0; i < 80; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.cssText = `
+      left: ${Math.random() * 100}vw;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      width: ${4 + Math.random() * 8}px;
+      height: ${4 + Math.random() * 8}px;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+      animation-duration: ${1.5 + Math.random() * 2}s;
+      animation-delay: ${Math.random() * 0.8}s;
+    `;
+                document.body.appendChild(piece);
+                piece.addEventListener('animationend', () => piece.remove());
+            }
+
+            // Show alert after confetti
+            setTimeout(() => {
+                const btn = document.querySelector('.get-cert-btn');
+                if (btn) {
+                    btn.textContent = '🎉 С ДНЁМ РОЖДЕНИЯ, РИТА!';
+                    btn.style.background = 'var(--archive-green)';
+                    btn.style.borderColor = 'var(--archive-green)';
+                    btn.style.color = 'white';
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>
